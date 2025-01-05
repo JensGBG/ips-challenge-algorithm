@@ -17,12 +17,12 @@ y_min, y_max = [np.min(data_np[:,1]), np.max(data_np[:,1])]
 z_min, z_max = [np.min(data_np[:,2]), np.max(data_np[:,2])]
 
 r = 0.05 # Distance which two points have to be within to count
-cube_width = 0.2 # Width of the cubes we iterate through
-sort_width_multiple = 4 # How many times larger the width of the "sorting cubes" should be
+cube_width = 0.175 # Width of the cubes we iterate through
+sort_width_multiple = 3 # How many times larger the width of the "sorting cubes" should be
 print(f"Number of points: {len(data_np)}")
 
 # Functions
-@njit(parallel=True)
+@njit(parallel=True, cache=True)
 def count_dots_within_reach(dots: np.ndarray, r: float = r):
     '''
     Given "dots", it counts how many pairs are within distance r from each other.
@@ -40,7 +40,7 @@ def count_dots_within_reach(dots: np.ndarray, r: float = r):
     count = np.sum(count_array) # and then sum the array
     return(count)
 
-@njit(parallel=True)
+@njit(parallel=True, cache=True)
 def count_a_against_b(A: np.ndarray, B: np.ndarray, r: float = r):
     '''Given two matrixes A and B, for each dot in A, count how many of the dots in B it reaches.'''
     length_A = np.size(A[:,0]) # (Number of points in A)
@@ -54,7 +54,7 @@ def count_a_against_b(A: np.ndarray, B: np.ndarray, r: float = r):
     count = np.sum(count_array)
     return(count)
 
-@njit # There is probably not much to be gained from paralallisation here, but why not try!
+@njit(cache=True) # There is probably not much to be gained from paralallisation here, but why not try!
 def get_infront_neighbours(cubes: Dict, key_A) -> np.ndarray:
     '''
     Gets relevant neighbours, see tuples in keys.
@@ -83,7 +83,7 @@ def get_infront_neighbours(cubes: Dict, key_A) -> np.ndarray:
     B = B[1:] # Remove first initial row
     return(B)
 
-@njit(parallel=True)
+@njit(parallel=True, cache=True)
 def creating_dict(empty_numba_dict: Dict, data_np: np.ndarray, x_min: float, x_max, y_min, y_max, z_min, z_max, cube_width: float=cube_width, sort_width_multiple: int=sort_width_multiple):
     '''
     This function takes data and creates a dictionary where the keys are indices of a given cube,
@@ -152,7 +152,7 @@ def creating_dict(empty_numba_dict: Dict, data_np: np.ndarray, x_min: float, x_m
     z_grid = np.arange(z_min, z_max+cube_width, step=cube_width)
     return(list_of_dicts, x_grid, y_grid, z_grid)
 
-@njit(parallel=True)
+@njit(parallel=True, cache=True)
 def counting_part_1(cubes_numba_dict, r: float=r):
     '''
     Iterating through every cube, getting the "relevant neighbours", and counting how many of the dots inside the current cube
@@ -170,7 +170,7 @@ def counting_part_1(cubes_numba_dict, r: float=r):
     count = np.sum(count_array)
     return(count)
 
-@njit # TODO: Try to paralellise here, fix count_part_2
+@njit(cache=True) # TODO: Try to paralellise here, fix count_part_2
 def counting_part_2(cubes_numba_dict, r: float=r):
     '''
     Iterate through every cube in the dictionary, and perform counts_dots_within_reach on the cube.
@@ -215,3 +215,4 @@ print(f"It took: {count_part_2_time-count_part_1_time} to count part 2.")
 
 count_total = count_part_1 + count_part_2
 print(f"Count using algorithm: {count_total}")
+print(f"Total time: {count_part_2_time-start_time}")
