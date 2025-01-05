@@ -1,5 +1,7 @@
+efefef
+
 This repository contains my submission to the IPS-coding-challenge, as well as explanation of my work.  
-Please run the following files on:  
+**Please run the following files on:**  
 Python 3.12.0  
 Numpy 2.0.0  
 Numba 0.60.0  
@@ -11,7 +13,7 @@ scipy 1.15.0
 
 *Only for plotting/visualization.
 
-Files:  
+**Files:**  
 main.py: Final algorithm for positions_large.xyz.  
 Explanation-of-Algorithm.pdf: Explanation of algorithm.  
 workbench_simulation.ipynb: Jupyter notebook for simulating algorithm with different parameters.
