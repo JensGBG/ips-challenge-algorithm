@@ -1,4 +1,10 @@
-This repository contains my submission to the IPS-coding-challenge, as well as explanation of my work.
+This repository contains my submission to the IPS-coding-challenge, as well as explanation of my work.  
+Please run the following files on:  
+Python 3.12.0  
+Numpy 2.0.0  
+Numba 0.60.0  
+pandas 2.2.3  
+Matplotlib 3.10.0
 
 Files:  
 main.py: Final algorithm for positions_large.xyz.  
